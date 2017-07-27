@@ -147,6 +147,7 @@ use.
 * Habitat, our sister project, collects [analytics](https://www.habitat.sh/docs/about-analytics/)
 related to user interactions.
 * Mac Homebrew collects user behavior [analytics](https://github.com/Homebrew/brew/blob/master/docs/Analytics.md).
+* .NET Core CLI collects user behaviour [analytics](https://blogs.msdn.microsoft.com/dotnet/2017/07/21/what-weve-learned-from-net-core-sdk-telemetry/)
 
 ### Types of collected data
 
