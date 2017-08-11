@@ -55,6 +55,9 @@ by using the above command, or may do so in a repository or working tree
 specific way by touching `.chef/telemetry_opt_out`, which will be
 searched for by tools in the same way as for chef config.
 
+A user may also set the environment variable `CHEF_TELEMETRY_OPT_OUT` to
+opt out.
+
 Server tools may each require their own separate data sharing preference.
 
 The Chef Client will never collect or share telemetry.
