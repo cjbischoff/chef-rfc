@@ -92,19 +92,21 @@ The gem will handle:
   duration of the process.
   * opt out - checking and setting of user opt out status.
   * (in the future) storing and forwarding of events - if a process would complete before any events
-  are sent, the library is responsible for storing the events, and
+  are sent, the library MAY be responsible for storing the events, and
   resending any further events at a suitable time in the future. Fresh
   events will be prioritised over older ones. For v1, it is acceptable
   to just throw away events that we couldn't send.
 
 To avoid blocking the application, the entire library will be built to
-use asynchronous operations, likely using the Concurrent Ruby library.
+use asynchronous operations, using the Concurrent Ruby library.
 
 Session management will be provided to ensure that we protect user's
 privacy by sending anonymous events, but also to allow developers to
 understand all the steps of an interaction. The library will ensure that
 a session ID times out after 10 minutes of inactivity, whilst providing
 the same ID to all clients used during the same time period.
+
+Events are sent using HTTP POST requests to Chef's telemetry end point. 
 
 ### Privacy and Data Retention
 
