@@ -76,6 +76,17 @@ This could be done with the addition of a ```include_policy``` directive, an exa
 include_policy "base", git: "github.com/myorg/policies.git"
 ```
 
+The ```include_policy``` directive will support two sources for policies: ```git```, with the following parameter being the URL to a Git repository, and ```local```, with the following parameter being a path to a file on disk.
+
+When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, the .lock file for that policy will be merged with the contents of the parent policy, before its own .lock file is computed.
+
+Essentially what this means is that the parent .lock file is computed from the merging of the following:
+
+* Data contained in the parent policyfile's .rb file
+* The lock files for all policies specified with an ```include_policy``` directive.
+
+```* TO DO: Talk about updates to branch policies *```
+
 FOR DISCUSSION:
 
 As far as I see it there are two possible ways this could be implemented:
