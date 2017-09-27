@@ -76,27 +76,26 @@ This could be done with the addition of a ```include_policy``` directive, an exa
 include_policy "base", git: "github.com/myorg/policies.git"
 ```
 
-The ```include_policy``` directive will support two sources for policies: ```git```, with the following parameter being the URL to a Git repository, and ```local```, with the following parameter being a path to a file on disk.
+The ```include_policy``` directive will support two sources for policies: 
 
-When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, the .lock file for that policy will be merged with the contents of the parent policy, before its own .lock file is computed.
+* ```git```, with the following parameter being the URL to a Git repository
+* ```local```, with the following parameter being a path to a file on disk.
+
+When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed.
+
+When included policies come from a ```git``` source, the SHA of the commit at the time the included lockfile was first pulled into the parent will be stored in the parent lockfile and used when the included Lockfile must be reprocessed. This ensures that only the policyfile for which the update command was called has changed. In the event of policy files being included from a ```local``` source, this guarantee cannot be given and the latest Lockfile for the included policy will be used.
 
 Essentially what this means is that the parent .lock file is computed from the merging of the following:
 
 * Data contained in the parent policyfile's .rb file
-* The lock files for all policies specified with an ```include_policy``` directive.
+* Computed cookbook locks from the lock files for all policies specified with an ```include_policy``` directive.
 
-```* TO DO: Talk about updates to branch policies *```
+The single fused lockfile produced by the above would then be uploaded to the Chef server as normal, and would function as a single Policy.
 
-FOR DISCUSSION:
 
-As far as I see it there are two possible ways this could be implemented:
+## Problems
 
-* When a policy is uploaded, in addition to its lockfile being computed, any policies which include it are recompiled to pull in the lockfile for the changed policy, remaining otherwise unchanged.
-* When a policy is uploaded, in addition to its lockfile being computed, any policies which include it are recompiled from scratch, pulling in updates to all changed lockfiles
-
-Either way, the eventual intent would be that you would end up with the overall policy consisting of a "fused" collection of all included Lockfiles.
-
-Another factor to consider here would be whether or not the contents of these various component policyfiles would be deep merged or have any form of precedence applied to them etc. Ie, how to we handle runlist and attribute clashes, or dependency clashes. 
+The principal potential issue with this approach is that because we are pulling cookbook locks from a number of included cookbooks, it is necessary for all included policy Lockfiles to be re-scanned upon regeneration of the parent Policyfile, so that the full set of cookbook locks and constraints can be examined and merged. Although using the ```git``` source to include Policies will mean that the same commit SHA is used every time to rescan the included Lockfile, when the ```local``` source is used we have to use whatever the current Lockfile present on disk is. This means that we cannot guarantee it has not changed since the last time it was scanned.
 
 ## Downstream Impact
 
