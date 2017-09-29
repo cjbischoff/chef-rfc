@@ -73,12 +73,12 @@ The proposed solution to the motivation described above is to allow a more compo
 This could be done with the addition of a ```include_policy``` directive, an example of which is shown below:
 
 ```ruby
-include_policy "base", git: "github.com/myorg/policies.git"
+include_policy "base", git: "github.com/myorg/policies.git", path: "foo/bar/baz.lock.json"
 ```
 
 The ```include_policy``` directive will support two sources for policies: 
 
-* ```git```, with the following parameter being the URL to a Git repository
+* ```git```, with the following parameter being the URL to a Git repository and a path parameter specifying the location of the file within the repository
 * ```local```, with the following parameter being a path to a file on disk.
 
 When the ```chef update``` command is used to apply any changes to a policyfile containing the ```include_policy``` directive, any cookbook locks from the lockfile of the included policyfile will be pulled into the parent policy before its own .lock file is computed.
