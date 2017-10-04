@@ -45,6 +45,12 @@ information so that users always know how to easily change their data sharing
 preference. Once set, any data sharing preference saved on an individual host
 will be honored by all Chef tools run on that host.
 
+On the first run of a telemetry enabled tool, the tool MUST prompt the
+user if a decision about whether to participate has not been made. That
+decision will be recorded for future use. If the tool is unable to prompt
+(because of a lack of terminal, for example), no decision will be recorded,
+and the library will select a reasonable default.
+
 We will implement a noun in the Chef DK, `chef telemetry`, that will
 allow users to check their opt out status and easily opt out, for
 instance with `chef telemetry status` and `chef telemetry disable`,
